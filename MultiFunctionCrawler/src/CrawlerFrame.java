@@ -154,6 +154,11 @@ public class CrawlerFrame extends JFrame {
         setAndAdd(rbtnStatic,150,100,100,50);*/
         //set button ActionListener.
         setMenu();
+        btnCrawlEssay.addActionListener((e)->{
+            String input =  inputArea.getText();
+            System.out.println(input);
+            EssayCrawler essayCrawler = new EssayCrawler(input);
+        });
         /*btnStart.addActionListener((e)->{
             String input = inputArea.getText();
             urls.clear();
