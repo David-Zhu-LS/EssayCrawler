@@ -10,10 +10,7 @@ import org.seleniumhq.jetty9.util.IO;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 import static java.lang.Thread.activeCount;
 import static java.lang.Thread.sleep;
@@ -58,53 +55,62 @@ public class EssayCrawler {
             if (esLst.size() >= MAXN) {
                 return;
             }
-            String frontUrl = urlQue.poll();
+            //从urlQue中随机取出一个元素
+            int idx = (int)(Math.random()*urlQue.size());
+            System.out.println(idx);
+            String frontUrl = urlQue.get(idx);
+            urlQue.remove(idx);
+
             driver.get(frontUrl);
-
-            //获取当前待扩展的论文的信息
-            String frontTitle = driver.findElement(By.className("main-info")).findElement(By.tagName("a")).getText();
-            int frontCite = Integer.parseInt(driver.findElement(By.className("sc_cite_cont")).getText());
-            Essay frontEssay = new Essay(frontTitle, frontUrl, frontCite);
-
-            // 检查该论文是否已经被扩展过
-            if(checkName(frontTitle)==false)
-                continue;
-            WebDriverWait wait = new WebDriverWait(driver, 20);
-            //selenium上模拟点击“引证文献”
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.className("cit_tab")));
-            WebElement btn1 = driver.findElement(By.className("cit_tab"));
-            Actions action = new Actions(driver);
-            action.click(btn1).perform();
-            // 等待页面加载
-
-            wait.until(ExpectedConditions.presenceOfElementLocated(By.className("citation_lists")));
-
-            ArrayList<WebElement> citList = new ArrayList<>();
             try{
+                //获取当前待扩展的论文的信息
+                String frontTitle = driver.findElement(By.className("main-info")).findElement(By.tagName("a")).getText();
+                int frontCite = Integer.parseInt(driver.findElement(By.className("sc_cite_cont")).getText());
+                Essay frontEssay = new Essay(frontTitle, frontUrl, frontCite);
+
+                // 检查该论文是否已经被扩展过
+                if(checkName(frontTitle)==false)
+                    continue;
+                WebDriverWait wait = new WebDriverWait(driver, 20);
+
+
+                //等待页面加载
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.className("cit_tab")));
+                //selenium上模拟点击“引证文献”
+                WebElement btn1 = driver.findElement(By.className("cit_tab"));
+                btn1.click();
+//            Actions action = new Actions(driver);
+//            action.click(btn1).perform();
+                // 等待页面加载
+
+                wait.until(ExpectedConditions.presenceOfElementLocated(By.className("citation_lists")));
+
+                ArrayList<WebElement> citList = new ArrayList<>();
                 citList = (ArrayList<WebElement>) driver.findElement(By.className("citation_lists")).findElements(By.tagName("li"));
+
+                int counter = 0;
+                for (WebElement esy : citList) {
+//            esy.findElement(By.className("relative_title"))
+                    int citNum = 0;
+                    try{
+                        citNum =  getCiteNum(esy.findElement(By.className("sc_cited")));
+                    }catch (Exception e){
+                        continue;
+                    }
+                    if (citNum < 10 || counter > 3) {
+                        break;
+                    }
+                    counter += 1;
+                    String essayTitle = esy.findElement(By.className("relative_title")).getText();
+                    String essayUrl = esy.findElement(By.className("relative_title")).getAttribute("href");
+                    frontEssay.citList.add(essayTitle);
+                    urlQue.add(essayUrl);
+                }
+                essay2Id.put(frontTitle,essay2Id.size());
+                esLst.add(frontEssay);
             }catch (Exception e){
                 continue;
             }
-            int counter = 0;
-            for (WebElement esy : citList) {
-//            esy.findElement(By.className("relative_title"))
-                int citNum = 6;
-                try{
-                    citNum =  getCiteNum(esy.findElement(By.className("sc_cited")));
-                }catch (Exception e){
-
-                }
-                if (citNum < 5 || counter > 5) {
-                    break;
-                }
-                counter += 1;
-                String essayTitle = esy.findElement(By.className("relative_title")).getText();
-                String essayUrl = esy.findElement(By.className("relative_title")).getAttribute("href");
-                frontEssay.citList.add(essayTitle);
-                urlQue.add(essayUrl);
-            }
-            essay2Id.put(frontTitle,essay2Id.size());
-            esLst.add(frontEssay);
         }
         System.out.println("Bye~");
 //        driver.close();
