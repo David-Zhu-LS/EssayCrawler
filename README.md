@@ -67,7 +67,7 @@ Quit：退出程序。
 
     ②selenium-server-standalone：主要用于解析网页中JavaScript的动态生成部分，保证论文的爬取顺利进行。
 
-    ③Graphviz：主要用于图的可视化，生成论文引用关系图
+    ③Graphviz：主要用于图的可视化，生成论文引用关系图。
 
   * saved
 
