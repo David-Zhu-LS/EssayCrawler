@@ -4,6 +4,7 @@ public class Essay {
     String name;
     String url;
     int citedCnt;
+    double heat;
     ArrayList<String>citList = new ArrayList<>();
     Essay(String _name,String _url,int _citedCnt){
         name = _name;

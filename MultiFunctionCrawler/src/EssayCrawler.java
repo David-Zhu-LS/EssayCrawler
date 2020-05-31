@@ -30,7 +30,7 @@ public class EssayCrawler {
     LinkedList<String> urlQue = new LinkedList<>();
     HashMap<String,Integer>essay2Id= new HashMap<>();
     static final int MAXN = 20; //maximum number of essays to be demonstrated
-    int [][]graph= new int[MAXN][MAXN]; //a graph that describes the relationships between essays
+    boolean [][]graph= new boolean[MAXN][MAXN]; //a graph that describes the relationships between essays
     String stUrl; // the very url our Crawler start with
 
     //constructor
@@ -135,22 +135,24 @@ public class EssayCrawler {
         driver.close();
     }
     // form a graph using esLst and essay2Id
-    void getGraph(){
-        int len = esLst.size();
+    Graph getGraph(){
+        int len = esLst.size(), edgeCnt = 0;
         for (int id = 0; id < len; id++) {
             Essay es = esLst.get(id);
             for(String title:es.citList){
                 if(essay2Id.containsKey(title)) {
-                    graph[id][essay2Id.get(title)] = 1;
+                    graph[id][essay2Id.get(title)] = true;
+                    edgeCnt += 1;
                 }
             }
         }
+        return Graph(len, edgeCnt, esLst, graph);
     }
     // print the graph
     void printGraph(){
         for (int i = 0; i < MAXN; i++) {
             for (int j = 0; j < MAXN; j++) {
-                System.out.printf("%d ",graph[i][j]);
+                System.out.printf("%d ", graph[i][j]? 1 : 0);
             }
             System.out.println("");
         }
