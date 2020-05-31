@@ -40,7 +40,6 @@ public class EssayCrawler {
         stUrl = _stUrl;
         essay2Id.clear();
     }
-
     // the major part of crawling
     void crawl(String stUrl) {
         // To run selenium,you need to set the path of your chromedriver
@@ -68,7 +67,6 @@ public class EssayCrawler {
             String frontUrl = urlQue.get(idx);
             urlQue.remove(idx);
 
-            //visit that url using selenium
             driver.get(frontUrl);
             try{
                 //basic information of the front essay
@@ -79,7 +77,6 @@ public class EssayCrawler {
                 // check uniqueness
                 if(checkName(frontTitle)==false)
                     continue;
-
                 // explicit wait is used in the following steps
                 WebDriverWait wait = new WebDriverWait(driver, 6);
                 //wait for the page to load
@@ -88,6 +85,7 @@ public class EssayCrawler {
                 WebElement btn1 = driver.findElement(By.className("cit_tab"));
                 btn1.click();
                 // wait for the page to load
+
                 wait.until(ExpectedConditions.presenceOfElementLocated(By.className("citation_lists")));
                 // all the essays that cited the front essay is to be stored in citList
                 ArrayList<WebElement> citList = new ArrayList<>();

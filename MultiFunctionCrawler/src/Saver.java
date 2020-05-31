@@ -29,7 +29,6 @@ public class Saver {
             if (ch == '?' || ch == '*' || ch == '/' || ch == '\\' || ch == ':') sb.append('.');
             else sb.append(ch);
         }
-
         modifiedUrl = sb.toString();
         //if lastOp is Crawl
         if (CrawlerFrame.lastOp == CrawlerFrame.Op.Crawl) {
@@ -74,6 +73,9 @@ public class Saver {
         CrawlerFrame.haveSaved = true;
     }
     public static void essaySaver(){
+        //If it has been saved, return;
+        if (CrawlerFrame.haveSaved) return;
+        if (CrawlerFrame.lastOp == CrawlerFrame.Op.None || CrawlerFrame.lastUrl == null) return;
         String path = defaultPath + File.separator + "Essay.txt";
         try {
             File fout = new File(path);
