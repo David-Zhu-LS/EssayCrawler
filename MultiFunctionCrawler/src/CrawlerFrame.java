@@ -125,7 +125,7 @@ public class CrawlerFrame extends JFrame {
         JButton btnSaveGraph = new JButton();
         JLabel lblInfo = new JLabel();
         inputArea = new JTextArea("Input the start url here.",1,60);
-        outputArea = new JTextArea("Results will be showed here.",30,20);
+        outputArea = new JTextArea("Results will be showed here.\n",30,20);
         //layout design.
         mainFrame.setLayout(null);
         mainFrame.setSize(800,636);
@@ -158,6 +158,12 @@ public class CrawlerFrame extends JFrame {
             String input =  inputArea.getText();
             System.out.println(input);
             EssayCrawler essayCrawler = new EssayCrawler(input);
+            essayCrawler.crawl(essayCrawler.stUrl);
+            essayCrawler.getGraph();
+            essayCrawler.printGraph();
+        });
+        btnSaveEssay.addActionListener((e)->{
+            Saver.essaySaver();
         });
         /*btnStart.addActionListener((e)->{
             String input = inputArea.getText();

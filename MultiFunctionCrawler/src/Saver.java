@@ -1,3 +1,4 @@
+import javax.swing.*;
 import javax.swing.filechooser.FileSystemView;
 import java.io.*;
 
@@ -10,6 +11,7 @@ import java.io.*;
  * The default filename is : modifiedUrl + lastOp.toString() + ".txt";
  */
 public class Saver {
+    static String defaultPath = "./saved/CrawlerResult";
     public static void save() {
         //If it has been saved, return;
         if (CrawlerFrame.haveSaved) return;
@@ -27,7 +29,7 @@ public class Saver {
             if (ch == '?' || ch == '*' || ch == '/' || ch == '\\' || ch == ':') sb.append('.');
             else sb.append(ch);
         }
-        String defaultPath = "./saved/CrawlerResult";
+
         modifiedUrl = sb.toString();
         //if lastOp is Crawl
         if (CrawlerFrame.lastOp == CrawlerFrame.Op.Crawl) {
@@ -41,6 +43,7 @@ public class Saver {
                     out.println((String) obj);
                 }
                 out.close();
+                JOptionPane.showMessageDialog(null,"Saved successfully!");
             } catch (FileNotFoundException e1) {
                 System.err.println("File not found!");
             } catch (IOException e2) {
@@ -60,6 +63,7 @@ public class Saver {
                 }
                 in.close();
                 out.close();
+                JOptionPane.showMessageDialog(null,"Saved successfully!");
             } catch (FileNotFoundException e1) {
                 System.err.println("File not found!");
             } catch (IOException e2) {
@@ -68,5 +72,25 @@ public class Saver {
         }
         //change some variables
         CrawlerFrame.haveSaved = true;
+    }
+    public static void essaySaver(){
+        String path = defaultPath + File.separator + "Essay.txt";
+        try {
+            File fout = new File(path);
+            BufferedReader in = new BufferedReader(new StringReader( CrawlerFrame.outputArea.getText()));
+            PrintWriter out = new PrintWriter(new FileWriter(fout));
+            String s = in.readLine();
+            while (s != null) {
+                out.println(s);
+                s = in.readLine();
+            }
+            in.close();
+            out.close();
+            JOptionPane.showMessageDialog(null,"Saved successfully!");
+        } catch (FileNotFoundException e1) {
+            System.err.println("File not found!");
+        } catch (IOException e2) {
+            e2.printStackTrace();
+        }
     }
 }
