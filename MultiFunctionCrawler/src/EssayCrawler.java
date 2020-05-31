@@ -66,7 +66,7 @@ public class EssayCrawler {
             System.out.println(idx);
             String frontUrl = urlQue.get(idx);
             urlQue.remove(idx);
-
+            //visit that url using selenium
             driver.get(frontUrl);
             try{
                 //basic information of the front essay
@@ -93,7 +93,7 @@ public class EssayCrawler {
 
                 int counter = 0;
                 for (WebElement esy : citList) {
-//            esy.findElement(By.className("relative_title"))
+                    // esy.findElement(By.className("relative_title"))
                     int citNum = 0;
                     try{
                         citNum =  getCiteNum(esy.findElement(By.className("sc_cited")));
