@@ -6,12 +6,8 @@ import org.pushingpixels.substance.api.skin.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import static javax.print.attribute.standard.MediaSizeName.C;
 
 /**
  * CrawlerFrame: This is the frame of Crawler.
@@ -59,15 +55,17 @@ public class CrawlerFrame extends JFrame {
     }
     /**
      * The followings are some fields of CrawlerFrame.
-     * 1) ConcurrentHashMap<String, Integer> urlsHaveBeenFound: the ConcurrentHashMap we used to store all the urls that
+     * 1) G: crawled data graph
+     * 2) ConcurrentHashMap<String, Integer> urlsHaveBeenFound: the ConcurrentHashMap we used to store all the urls that
      * we have got. It is thread-safe and fast and convenient to check whether a website has been found.
-     * 2) ConcurrentLinkedQueue<String> urls: the ConcurrentLinkedQueue we used to temporarily store the urls we want to
+     * 3) ConcurrentLinkedQueue<String> urls: the ConcurrentLinkedQueue we used to temporarily store the urls we want to
      * expand.
-     * 3) urlOrigin: Record the original url.
-     * 4) lastUrl: Record the url of last operation.
-     * 5) lastOp: Record the last operation.
-     * 6) haveSaved: whether the content we want to save has been saved.
+     * 4) urlOrigin: Record the original url.
+     * 5) lastUrl: Record the url of last operation.
+     * 6) lastOp: Record the last operation.
+     * 7) haveSaved: whether the content we want to save has been saved.
      */
+    public static Graph G;
     public static JFrame mainFrame = new JFrame();
     public static ConcurrentHashMap<String, Integer> urlsHaveBeenFound;
     public static ConcurrentLinkedQueue<String> urls;
@@ -143,14 +141,14 @@ public class CrawlerFrame extends JFrame {
             System.out.println(input);
             EssayCrawler essayCrawler = new EssayCrawler(input);
             essayCrawler.crawl(essayCrawler.stUrl);
-            essayCrawler.getGraph();
+            G = essayCrawler.getGraph();
             essayCrawler.printGraph();
         });
         btnSaveEssay.addActionListener((e)->{
             Saver.essaySaver();
         });
         btnGenerateGraph.addActionListener((e)->{
-            DisplayGraphFrame.display();
+            DisplayGraphFrame.display(G);
         });
         btnSaveGraph.addActionListener((e)->{
 

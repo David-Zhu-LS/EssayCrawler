@@ -9,12 +9,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.seleniumhq.jetty9.util.IO;
 
 import javax.swing.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
 
-import static java.lang.Thread.activeCount;
 import static java.lang.Thread.sleep;
 
 /**
@@ -43,7 +39,7 @@ public class EssayCrawler {
     // the major part of crawling
     void crawl(String stUrl) {
         // To run selenium,you need to set the path of your chromedriver
-        System.setProperty("webdriver.chrome.driver", "D:\\chromedriver_win32\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", ".\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         //check the input url
         if(!UrlKit.checkUrl(stUrl)){
@@ -133,6 +129,7 @@ public class EssayCrawler {
         }
         System.out.println("Finished!");
         driver.close();
+        return;
     }
     // form a graph using esLst and essay2Id
     Graph getGraph(){
@@ -146,7 +143,7 @@ public class EssayCrawler {
                 }
             }
         }
-        return Graph(len, edgeCnt, esLst, graph);
+        return new Graph(len, edgeCnt, esLst, graph);
     }
     // print the graph
     void printGraph(){

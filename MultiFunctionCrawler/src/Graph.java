@@ -1,7 +1,7 @@
-import java.util.ArrayList;
+import java.util.List;
 
 public class Graph {
-    int nodeCnt, edgeCnt, minFlow = MakeGraph.nodeMax - 1, maxFlow = 0, flowRange;
+    int nodeCnt, edgeCnt, minFlow = Integer.MAX_VALUE, maxFlow = 0, flowRange;
     List<Essay> nodes;
     boolean[][] mat;
     Graph(int _nodeCnt, int _edgeCnt, List<Essay> _nodes, boolean[][] _mat){

@@ -14,13 +14,18 @@ public class DisplayGraphFrame extends JFrame {
     public DisplayGraphFrame(SubstanceSkin skin) {
     }
     // display
-    public static void display(){
+    public static void display(Graph G){
         //create components.
         JButton btnSaveGraph = new JButton();
         JButton btnQuit = new JButton();
         JPanel pnlGraph = new JPanel();
         JLabel l = new JLabel();
-        ImageIcon icon=new ImageIcon("./saved/10.jpg");
+        try {
+            MakeGraph.generate(G);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        ImageIcon icon=new ImageIcon("./saved/graph.png");
         int g_nWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
         int g_nHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
         //int maxWidth = (int) (g_nWidth * 0.7);
@@ -45,6 +50,8 @@ public class DisplayGraphFrame extends JFrame {
         btnQuit.addActionListener((e)->{
             displayFrame.setVisible(false);
         });
+
+
         //set the close button
         displayFrame.setVisible(true);
         displayFrame.setLocationRelativeTo(null);
