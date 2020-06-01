@@ -16,9 +16,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * Besides, you can choose to change the theme.
  * Additionally, It has 8 functions in function menu:
  * 1)NewUrlCrawl: Start a new crawling from the given url in the inputArea and then get to other ones.
- *  We use ConcurrentLinkedQueue to store the urls we have found but haven't expanded yet.
- *  We use ConcurrentHashMap to store all the urls that we have got,
- *  for ConcurrentHashMap is thread-safe and it is fast and convenient to check whether a url has been found.
+ * We use ConcurrentLinkedQueue to store the urls we have found but haven't expanded yet.
+ * We use ConcurrentHashMap to store all the urls that we have got,
+ * for ConcurrentHashMap is thread-safe and it is fast and convenient to check whether a url has been found.
  * 2)KeepUrlCrawl: Keep crawling.
  * 3)TagsCount: Count the tags that have been used.
  * 4)HttpGet: Get Http connection and make the GET request. Print the response.
@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * 6)GetPicture: Get the resource of pictures.(Not download.)
  * 7)Save: Save the urls we have got or other content in the outputArea.
  * 8)Clear: Clear the former information.
+ *
  * @auther PKU_zzn
  */
 public class CrawlerFrame extends JFrame {
@@ -47,12 +48,15 @@ public class CrawlerFrame extends JFrame {
             //SubstanceLookAndFeel.setCurrentBorderPainter(new StandardBorderPainter());
             //SubstanceLookAndFeel.setCurrentGradientPainter(new StandardGradientPainter());
             //SubstanceLookAndFeel.setCurrentTitlePainter(new FlatTitePainter());
-            SwingUtilities.invokeLater(()->{CrawlerFrame myURLCrawler = new CrawlerFrame();});
+            SwingUtilities.invokeLater(() -> {
+                CrawlerFrame myURLCrawler = new CrawlerFrame();
+            });
         } catch (Exception e) {
             System.err.println("Something went wrong!");
         }
         //CrawlerFrame myURLCrawler = new CrawlerFrame();
     }
+
     /**
      * The followings are some fields of CrawlerFrame.
      * 1) G: crawled data graph
@@ -73,14 +77,18 @@ public class CrawlerFrame extends JFrame {
     public static String lastUrl;
     public static Op lastOp;
     public static boolean haveSaved;
-    public static enum Op{None,Crawl,TagsCount,HttpGet,GetEmailAddr,GetPictures,Save,Clear};
+
+    public static enum Op {None, Crawl, TagsCount, HttpGet, GetEmailAddr, GetPictures, Save, Clear}
+
+    ;
     public static DisplayGraphFrame disGraphFrame;
+
     /**
      * Constructors:
      * 1) Initialize fields: urlsHaveBeenFound, urls, urlOrigin, lastUrl, lastOp and haveSaved
      * 2) Initialize the frame: invoke method initializeFrame()
      */
-    public CrawlerFrame(){
+    public CrawlerFrame() {
         urlsHaveBeenFound = new ConcurrentHashMap<String, Integer>();
         urls = new ConcurrentLinkedQueue<String>();
         urlOrigin = null;
@@ -90,6 +98,7 @@ public class CrawlerFrame extends JFrame {
         disGraphFrame = new DisplayGraphFrame(new GraphiteAquaSkin());
         initializeFrame();
     }
+
     /**
      * The followings are several fields and methods used to initialize the frame.
      * inputUrl: the original url which is "Input the start url here." by default
@@ -107,57 +116,58 @@ public class CrawlerFrame extends JFrame {
     public static JTextArea outputArea;
     public static JRadioButton rbtnDynamic, rbtnStatic;
     public static boolean isDynamic = false;
-    public static void initializeFrame(){
+
+    public static void initializeFrame() {
         //create objects.
         JButton btnCrawlEssay = new JButton();
         JButton btnSaveEssay = new JButton();
         JButton btnGenerateGraph = new JButton();
         JButton btnSaveGraph = new JButton();
         JLabel lblInfo = new JLabel();
-        inputArea = new JTextArea("Input the start url here.",1,60);
-        outputArea = new JTextArea("Results will be showed here.\n",30,20);
+        inputArea = new JTextArea("Input the start url here.", 1, 60);
+        outputArea = new JTextArea("Results will be showed here.\n", 30, 20);
         //layout design.
         mainFrame.setLayout(null);
-        mainFrame.setSize(800,636);
+        mainFrame.setSize(800, 636);
         mainFrame.setTitle("Crawler");
-        setAndAddButton(mainFrame,btnCrawlEssay,"CrawlEssay",Color.lightGray,520,18,116,40);
-        setAndAddButton(mainFrame,btnSaveEssay,"SaveEssay",Color.lightGray,650,18,116,40);
-        setAndAddButton(mainFrame,btnGenerateGraph,"MakeGraph",Color.lightGray,520,72,116,40);
-        setAndAddButton(mainFrame,btnSaveGraph,"SaveGraph",Color.lightGray,650,72,116,40);
-        setAndAdd(mainFrame,lblInfo,520,126,250,300);
-        lblInfo.setSize(250,150);
+        setAndAddButton(mainFrame, btnCrawlEssay, "CrawlEssay", Color.lightGray, 520, 18, 116, 40);
+        setAndAddButton(mainFrame, btnSaveEssay, "SaveEssay", Color.lightGray, 650, 18, 116, 40);
+        setAndAddButton(mainFrame, btnGenerateGraph, "MakeGraph", Color.lightGray, 520, 72, 116, 40);
+        setAndAddButton(mainFrame, btnSaveGraph, "SaveGraph", Color.lightGray, 650, 72, 116, 40);
+        setAndAdd(mainFrame, lblInfo, 520, 126, 250, 300);
+        lblInfo.setSize(250, 150);
         String infoContent = "<html>Click a button to start.<br/>More information could be shown here.<br/>" +
                 "How to use the program?<br/>(1) Input the url you want to start crawling from in the upper textField" +
                 "<br/>(2) Click the button.<html>";
         lblInfo.setText(infoContent);
-        setAndAddTextArea(mainFrame,inputArea,18,18,484,30,false,18);
-        setAndAddTextArea(mainFrame,outputArea,18,72,484,500,true,15);
+        setAndAddTextArea(mainFrame, inputArea, 18, 18, 484, 30, false, 18);
+        setAndAddTextArea(mainFrame, outputArea, 18, 72, 484, 500, true, 15);
         /*setAndAdd(rbtnDynamic,50,100,100,50);
         setAndAdd(rbtnStatic,150,100,100,50);*/
         //set button ActionListener.
         setMenu();
-        btnCrawlEssay.addActionListener((e)->{
-            String input =  inputArea.getText();
+        btnCrawlEssay.addActionListener((e) -> {
+            String input = inputArea.getText();
             System.out.println(input);
             EssayCrawler essayCrawler = new EssayCrawler(input);
             essayCrawler.crawl(essayCrawler.stUrl);
             G = essayCrawler.getGraph();
             essayCrawler.printGraph();
         });
-        btnSaveEssay.addActionListener((e)->{
+        btnSaveEssay.addActionListener((e) -> {
             Saver.essaySaver();
         });
-        btnGenerateGraph.addActionListener((e)->{
+        btnGenerateGraph.addActionListener((e) -> {
             DisplayGraphFrame.display(G);
         });
-        btnSaveGraph.addActionListener((e)->{
+        btnSaveGraph.addActionListener((e) -> {
 
         });
         //set JTextArea.
         outputArea.setLineWrap(true);        // Activate LineWrap function(start a new line automatically)
         outputArea.setWrapStyleWord(true);   // Activate WrapStyleWord function(start a line without break a word)
         JScrollPane scroller = new JScrollPane();   // set the scrollbar
-        scroller.setBounds(18,72,484,500);
+        scroller.setBounds(18, 72, 484, 500);
         mainFrame.getContentPane().add(scroller);
         scroller.setViewportView(outputArea);
         scroller.setHorizontalScrollBarPolicy(
@@ -166,35 +176,39 @@ public class CrawlerFrame extends JFrame {
                 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);//vertical one always appears
         //set the close button
         mainFrame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        mainFrame.setVisible( true );
+        mainFrame.setVisible(true);
         mainFrame.setLocationRelativeTo(null);
         mainFrame.setResizable(false);
     }
+
     // Set and add the button to the frame.
-    public static void setAndAddButton(JFrame dst, JButton button, String name, Color color, int posx, int posy, int width, int height){
+    public static void setAndAddButton(JFrame dst, JButton button, String name, Color color, int posx, int posy, int width, int height) {
         button.setText(name);
         button.setBackground(color);
-        button.setBounds(posx,posy,width,height);
+        button.setBounds(posx, posy, width, height);
         // Text displayed at the center
         button.setHorizontalTextPosition(JButton.CENTER);
         button.setVerticalTextPosition(JButton.CENTER);
         dst.getContentPane().add(button);
     }
+
     // Set and add the textArea to the frame.
     public static void setAndAddTextArea(JFrame dst, JTextArea textArea, int posx, int posy, int width, int height,
-                                         boolean inScroller, int fontSize){
-        textArea.setFont(new Font("Dialog",Font.PLAIN,fontSize));
-        textArea.setBounds(posx,posy,width,height);
-        if(!inScroller)// if the TextArea doesn't have a scrollbar, add it to the frame.
+                                         boolean inScroller, int fontSize) {
+        textArea.setFont(new Font("Dialog", Font.PLAIN, fontSize));
+        textArea.setBounds(posx, posy, width, height);
+        if (!inScroller)// if the TextArea doesn't have a scrollbar, add it to the frame.
             dst.getContentPane().add(textArea);
     }
+
     // Set and add the component to the frame.
-    public static void setAndAdd(JFrame dst,JComponent component, int posx, int posy, int width, int height){
-        component.setFont(new Font("Dialog",Font.PLAIN,15));
-        component.setBounds(posx,posy,width,height);
+    public static void setAndAdd(JFrame dst, JComponent component, int posx, int posy, int width, int height) {
+        component.setFont(new Font("Dialog", Font.PLAIN, 15));
+        component.setBounds(posx, posy, width, height);
         dst.getLayeredPane().add(component);
     }
-    public static void setMenu(){
+
+    public static void setMenu() {
         MenuBar mb = new MenuBar();
         // Create a menuBar
         mainFrame.setMenuBar(mb);
@@ -234,44 +248,43 @@ public class CrawlerFrame extends JFrame {
         mMode.add(miDynamic);
         mMode.add(miStatic);
         // Add actionListener
-        miNewCrawl.addActionListener((e)->{
+        miNewCrawl.addActionListener((e) -> {
             String input = inputArea.getText();
             urls.clear();
             urlsHaveBeenFound.clear();
             Crawler.crawl(input);
         });
-        miKeepCrawl.addActionListener((e)->{
-            if(urlOrigin != null){
+        miKeepCrawl.addActionListener((e) -> {
+            if (urlOrigin != null) {
                 Crawler.crawl(urlOrigin);
-            }
-            else{
+            } else {
                 String input = inputArea.getText();
                 Crawler.crawl(input);
             }
         });
-        miCountTag.addActionListener((e)->{
+        miCountTag.addActionListener((e) -> {
             String input = inputArea.getText();
             TagCounter.getTagCount(input);
         });
-        miGetEA.addActionListener((e)->{
+        miGetEA.addActionListener((e) -> {
             String input = inputArea.getText();
             EmailGetter.getEmailAddr(input);
         });
-        miGetPic.addActionListener((e)->{
+        miGetPic.addActionListener((e) -> {
             String input = inputArea.getText();
             PictureGetter.getPicture(input);
         });
-        miSave.addActionListener((e)->{
+        miSave.addActionListener((e) -> {
             Saver.save();
         });
-        miQuit.addActionListener((e)->{
+        miQuit.addActionListener((e) -> {
             System.exit(0);
         });
-        miHttpGet.addActionListener((e)->{
+        miHttpGet.addActionListener((e) -> {
             String input = inputArea.getText();
             HttpGetter.httpGet(input);
         });
-        miClear.addActionListener((e)->{
+        miClear.addActionListener((e) -> {
             urlOrigin = null;
             urls.clear();
             urlsHaveBeenFound.clear();
@@ -280,35 +293,37 @@ public class CrawlerFrame extends JFrame {
         });
 
         isDynamic = false;
-        miDynamic.addActionListener(e->{
+        miDynamic.addActionListener(e -> {
             miDynamic.setLabel("√  Dynamic");
             miStatic.setLabel("Static");
             isDynamic = true;
         });
-        miStatic.addActionListener(e->{
+        miStatic.addActionListener(e -> {
             miStatic.setLabel("√  Static");
             miDynamic.setLabel("Dynamic");
             isDynamic = false;
         });
     }
+
     // set the Theme menu
     public static int used = 3;
-    public static String[] strs = new String[]{"Autumn","DustCoffee","EmeraldDusk","GraphiteAqua",
-            "NebulaBrickWall","OfficeBlue","OfficsBlack","Twilight"};
-    public static MenuItem[] miArray = new MenuItem[]{new MenuItem(strs[0]),new MenuItem(strs[1]),
-            new MenuItem(strs[2]),new MenuItem(strs[3]),new MenuItem(strs[4]),
-            new MenuItem(strs[5]),new MenuItem(strs[6]),new MenuItem(strs[7])};
-    public static SubstanceSkin[]  skins = new SubstanceSkin[]{new AutumnSkin(),new DustCoffeeSkin(),new EmeraldDuskSkin(),
+    public static String[] strs = new String[]{"Autumn", "DustCoffee", "EmeraldDusk", "GraphiteAqua",
+            "NebulaBrickWall", "OfficeBlue", "OfficsBlack", "Twilight"};
+    public static MenuItem[] miArray = new MenuItem[]{new MenuItem(strs[0]), new MenuItem(strs[1]),
+            new MenuItem(strs[2]), new MenuItem(strs[3]), new MenuItem(strs[4]),
+            new MenuItem(strs[5]), new MenuItem(strs[6]), new MenuItem(strs[7])};
+    public static SubstanceSkin[] skins = new SubstanceSkin[]{new AutumnSkin(), new DustCoffeeSkin(), new EmeraldDuskSkin(),
             new GraphiteAquaSkin(), new NebulaBrickWallSkin(), new OfficeBlue2007Skin(), new OfficeBlack2007Skin(),
             new TwilightSkin()};
-    public static void setThemeMenu(Menu m){
-        for(MenuItem mi : miArray){
+
+    public static void setThemeMenu(Menu m) {
+        for (MenuItem mi : miArray) {
             m.add(mi);
         }
         miArray[used].setEnabled(false);
-        for(int i = 0; i < strs.length; ++i){
+        for (int i = 0; i < strs.length; ++i) {
             int finalI = i;
-            miArray[i].addActionListener((e)->{
+            miArray[i].addActionListener((e) -> {
                 try {
                     SubstanceLookAndFeel.setSkin(skins[finalI]);
                     miArray[used].setEnabled(true);

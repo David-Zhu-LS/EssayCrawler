@@ -21,12 +21,13 @@ import java.util.concurrent.CountDownLatch;
 public class Crawler {
     final static int MAX_LOOP_COUNT = 10;
     final static int EXPAND_MAX = 5;
-    public static void crawl(String initialUrl){
+
+    public static void crawl(String initialUrl) {
         // start crawling and display information in time.
         CrawlerFrame.outputArea.setText("Crawling...\n");
         CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
         //check the input url
-        if(!UrlKit.checkUrl(initialUrl)){
+        if (!UrlKit.checkUrl(initialUrl)) {
             //System.out.println("Url input invalid! Please input another one.");
             CrawlerFrame.outputArea.append("Url input invalid! Please input another one.");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
@@ -39,37 +40,37 @@ public class Crawler {
         CrawlerFrame.urlsHaveBeenFound.put(initialUrl, 0);
         int counter = 0;
         // Crawl from the urls in the queue.
-        while(!CrawlerFrame.urls.isEmpty()){
+        while (!CrawlerFrame.urls.isEmpty()) {
             String url = CrawlerFrame.urls.poll();
             //System.out.println(url);
             Integer layer0 = CrawlerFrame.urlsHaveBeenFound.get(url);
             // use a latch in case it is necessary.
             CountDownLatch latch = new CountDownLatch(1);
             final int layer = layer0 + 1;
-            CrawlerFrame.outputArea.append("layer " + layer + " " + url +"\n");
+            CrawlerFrame.outputArea.append("layer " + layer + " " + url + "\n");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
-            Thread downloadThread = new Thread(()->{
-                try{
+            Thread downloadThread = new Thread(() -> {
+                try {
                     //Download the content from the url.
                     String content;
-                    if(CrawlerFrame.isDynamic) content = HttpKit.get(url);
-                    else content = Download.download(new URL(url),"UTF-8");
+                    if (CrawlerFrame.isDynamic) content = HttpKit.get(url);
+                    else content = Download.download(new URL(url), "UTF-8");
                     //Parse the content and get what we want. Store it in a list and then return.
                     List<String> moreUrls = Parsers.parseToGetUrls(content);
                     //If the url has been found, ignore it. Otherwise, add it to the queue and map.
                     int cnt = 0;
-                    for(String str : moreUrls){
-                        if(!CrawlerFrame.urlsHaveBeenFound.containsKey(str)){
+                    for (String str : moreUrls) {
+                        if (!CrawlerFrame.urlsHaveBeenFound.containsKey(str)) {
                             CrawlerFrame.urls.add(str);
-                            CrawlerFrame.urlsHaveBeenFound.put(str,layer);
+                            CrawlerFrame.urlsHaveBeenFound.put(str, layer);
                             cnt++;
                         }
-                        if(cnt >= EXPAND_MAX) break;
+                        if (cnt >= EXPAND_MAX) break;
                     }
                     latch.countDown();
                 }
                 //Deal with the exceptions.
-                catch(Exception ex){
+                catch (Exception ex) {
                     System.out.println("An exception occurs in downloading thread.");
                     ex.printStackTrace();
                     System.out.println(ex.getMessage());
@@ -78,14 +79,17 @@ public class Crawler {
             });
             downloadThread.start();
             counter++;
-            if(counter >= MAX_LOOP_COUNT) {
+            if (counter >= MAX_LOOP_COUNT) {
                 break;
             }
-            try{ Thread.sleep(4000); } catch (InterruptedException ie){}
-            if(CrawlerFrame.urls.isEmpty()){
-                try{
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException ie) {
+            }
+            if (CrawlerFrame.urls.isEmpty()) {
+                try {
                     latch.await();
-                } catch(InterruptedException iex){
+                } catch (InterruptedException iex) {
                     System.out.println("An exception occurs in latch.");
                     iex.printStackTrace();
                     System.out.println(iex.getMessage());
@@ -96,12 +100,12 @@ public class Crawler {
         CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
         //print other urls we have got.
         Object[] urlsArray = CrawlerFrame.urls.toArray();
-        for(Object obj : urlsArray){
-            String url = (String)obj;
+        for (Object obj : urlsArray) {
+            String url = (String) obj;
             //System.out.println(url);
             Integer layer0 = CrawlerFrame.urlsHaveBeenFound.get(url);
             final int layer = layer0 + 1;
-            CrawlerFrame.outputArea.append("layer " + layer + " " + url +"\n");
+            CrawlerFrame.outputArea.append("layer " + layer + " " + url + "\n");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
         }
         CrawlerFrame.outputArea.append("Crawling ends.");

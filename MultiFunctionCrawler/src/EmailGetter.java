@@ -16,12 +16,12 @@ import java.util.concurrent.CountDownLatch;
  * 4) print the result to the outputArea.
  */
 public class EmailGetter {
-    public static void getEmailAddr(String initialUrl){
+    public static void getEmailAddr(String initialUrl) {
         // start getting email addresses and display information in time.
         CrawlerFrame.outputArea.setText("Getting email addresses...\n");
         CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
         //check the input url
-        if(!UrlKit.checkUrl(initialUrl)){
+        if (!UrlKit.checkUrl(initialUrl)) {
             //System.out.println("Url input invalid! Please input another one.");
             CrawlerFrame.outputArea.append("Url input invalid! Please input another one.");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
@@ -29,32 +29,32 @@ public class EmailGetter {
             return;
         }
         CountDownLatch latch = new CountDownLatch(1);
-        Thread gettingEmailAddrThread = new Thread(()->{
-            try{
+        Thread gettingEmailAddrThread = new Thread(() -> {
+            try {
                 //Download the content from the url.
                 String content;
-                if(CrawlerFrame.isDynamic) content = HttpKit.get(initialUrl);
-                else content = Download.download(new URL(initialUrl),"UTF-8");
+                if (CrawlerFrame.isDynamic) content = HttpKit.get(initialUrl);
+                else content = Download.download(new URL(initialUrl), "UTF-8");
                 //Parse the content and get what we want. Store it in a list and then return.
                 List<String> emailAddr = Parsers.parseToGetEmailAddr(content);
                 //print the result.
-                for(String str : emailAddr){
-                    CrawlerFrame.outputArea.append(str+"\n");
+                for (String str : emailAddr) {
+                    CrawlerFrame.outputArea.append(str + "\n");
                     CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
                 }
                 latch.countDown();
             }
             //Deal with the exceptions.
-            catch(Exception ex){
+            catch (Exception ex) {
                 System.out.println("An exception occurs in gettingEmailAddrThread.");
                 ex.printStackTrace();
                 System.out.println(ex.getMessage());
             }
         });
         gettingEmailAddrThread.start();
-        try{
+        try {
             latch.await();
-        } catch(InterruptedException iex){
+        } catch (InterruptedException iex) {
             System.out.println("An exception occurs in latch.");
             iex.printStackTrace();
             System.out.println(iex.getMessage());

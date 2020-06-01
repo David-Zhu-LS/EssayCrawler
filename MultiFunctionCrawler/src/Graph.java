@@ -4,7 +4,8 @@ public class Graph {
     int nodeCnt, edgeCnt, minFlow = Integer.MAX_VALUE, maxFlow = 0, flowRange;
     List<Essay> nodes;
     boolean[][] mat;
-    Graph(int _nodeCnt, int _edgeCnt, List<Essay> _nodes, boolean[][] _mat){
+
+    Graph(int _nodeCnt, int _edgeCnt, List<Essay> _nodes, boolean[][] _mat) {
         nodeCnt = _nodeCnt;
         edgeCnt = _edgeCnt;
         nodes = _nodes;

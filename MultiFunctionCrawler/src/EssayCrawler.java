@@ -19,14 +19,17 @@ import static java.lang.Thread.sleep;
  * 1) check the input: whether it is a correct and effective url.
  * 2) parse the information and get new urls.
  * 3) print the result to the outputArea.
+ *
  * @author Lin_Shu
  */
 public class EssayCrawler {
+    static final int MIN_CIT = 10; // if the citation number of an essay is below 10,abandon it
+    static final int MAX_CHILDREN = 3; //from every essay,only the top 3 could enqueue
+    static final int MAXN = 10; //maximum number of essays to be demonstrated
     ArrayList<Essay> esLst = new ArrayList<>();
     LinkedList<String> urlQue = new LinkedList<>();
-    HashMap<String,Integer>essay2Id= new HashMap<>();
-    static final int MAXN = 20; //maximum number of essays to be demonstrated
-    boolean [][]graph= new boolean[MAXN][MAXN]; //a graph that describes the relationships between essays
+    HashMap<String, Integer> essay2Id = new HashMap<>();
+    boolean[][] graph = new boolean[MAXN][MAXN]; //a graph that describes the relationships between essays
     String stUrl; // the very url our Crawler start with
 
     //constructor
@@ -36,42 +39,45 @@ public class EssayCrawler {
         stUrl = _stUrl;
         essay2Id.clear();
     }
+
     // the major part of crawling
     void crawl(String stUrl) {
         // To run selenium,you need to set the path of your chromedriver
         System.setProperty("webdriver.chrome.driver", ".\\chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         //check the input url
-        if(!UrlKit.checkUrl(stUrl)){
+        if (!UrlKit.checkUrl(stUrl)) {
             //System.out.println("Url input invalid! Please input another one.");
             CrawlerFrame.outputArea.setText("");
             CrawlerFrame.outputArea.append("Url input invalid! Please input another one.\n");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
             CrawlerFrame.urlOrigin = null;
             driver.close();
-            JOptionPane.showMessageDialog(null,"Invalid Url!");
+            JOptionPane.showMessageDialog(null, "Invalid Url!");
             return;
         }
         urlQue.push(stUrl);
         while (!urlQue.isEmpty()) {
             if (esLst.size() >= MAXN) {
+                driver.close();
+                JOptionPane.showMessageDialog(null, "Done!");
                 return;
             }
             //randomly pop an element from the urlQue
-            int idx = (int)(Math.random()*urlQue.size());
+            int idx = (int) (Math.random() * urlQue.size());
             System.out.println(idx);
             String frontUrl = urlQue.get(idx);
             urlQue.remove(idx);
             //visit that url using selenium
             driver.get(frontUrl);
-            try{
+            try {
                 //basic information of the front essay
                 String frontTitle = driver.findElement(By.className("main-info")).findElement(By.tagName("a")).getText();
                 int frontCite = Integer.parseInt(driver.findElement(By.className("sc_cite_cont")).getText());
                 Essay frontEssay = new Essay(frontTitle, frontUrl, frontCite);
 
                 // check uniqueness
-                if(checkName(frontTitle)==false)
+                if (checkName(frontTitle) == false)
                     continue;
                 // explicit wait is used in the following steps
                 WebDriverWait wait = new WebDriverWait(driver, 6);
@@ -91,14 +97,14 @@ public class EssayCrawler {
                 for (WebElement esy : citList) {
                     // esy.findElement(By.className("relative_title"))
                     int citNum = 0;
-                    try{
-                        citNum =  getCiteNum(esy.findElement(By.className("sc_cited")));
-                    }catch (Exception e){
+                    try {
+                        citNum = getCiteNum(esy.findElement(By.className("sc_cited")));
+                    } catch (Exception e) {
                         continue;
                     }
                     // we would dismiss the essay if it's seldom cited
                     // meanwhile, for variety, we only expand top-3 most cited essays
-                    if (citNum < 10 || counter > 3) {
+                    if (citNum < MIN_CIT || counter > MAX_CHILDREN) {
                         break;
                     }
                     counter += 1;
@@ -108,20 +114,20 @@ public class EssayCrawler {
                     urlQue.add(essayUrl);
                 }
                 // add front essay to esLst and show its information in outputArea
-                essay2Id.put(frontTitle,essay2Id.size());
+                essay2Id.put(frontTitle, essay2Id.size());
                 esLst.add(frontEssay);
-                showEssay(frontEssay,esLst.size());
-            }catch (Exception e){
+                showEssay(frontEssay, esLst.size());
+            } catch (Exception e) {
                 // if exception occurred with no essays in esLst
                 // we deduce that the url is not appropriate
                 // otherwise, we simply go to next essay
-                if(esLst.size()==0){
+                if (esLst.size() == 0) {
                     CrawlerFrame.outputArea.setText("");
                     CrawlerFrame.outputArea.append("Please input an appropriate Url!\n");
                     CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
                     CrawlerFrame.urlOrigin = null;
                     driver.close();
-                    JOptionPane.showMessageDialog(null,"Inappropriate Url!");
+                    JOptionPane.showMessageDialog(null, "Inappropriate Url!");
                     return;
                 }
                 continue;
@@ -131,13 +137,14 @@ public class EssayCrawler {
         driver.close();
         return;
     }
+
     // form a graph using esLst and essay2Id
-    Graph getGraph(){
+    Graph getGraph() {
         int len = esLst.size(), edgeCnt = 0;
         for (int id = 0; id < len; id++) {
             Essay es = esLst.get(id);
-            for(String title:es.citList){
-                if(essay2Id.containsKey(title)) {
+            for (String title : es.citList) {
+                if (essay2Id.containsKey(title)) {
                     graph[id][essay2Id.get(title)] = true;
                     edgeCnt += 1;
                 }
@@ -145,32 +152,36 @@ public class EssayCrawler {
         }
         return new Graph(len, edgeCnt, esLst, graph);
     }
+
     // print the graph
-    void printGraph(){
+    void printGraph() {
         for (int i = 0; i < MAXN; i++) {
             for (int j = 0; j < MAXN; j++) {
-                System.out.printf("%d ", graph[i][j]? 1 : 0);
+                System.out.printf("%d ", graph[i][j] ? 1 : 0);
             }
             System.out.println("");
         }
     }
+
     // show basic information of an essay
-    void showEssay(Essay essay,int idx){
-        CrawlerFrame.outputArea.append(idx+"---------------------------\n");
-        CrawlerFrame.outputArea.append("Title:"+essay.name+"\n");
-        CrawlerFrame.outputArea.append("Url:"+essay.url+"\n");
-        CrawlerFrame.outputArea.append("CitedCnt:"+essay.citedCnt+"\n");
+    void showEssay(Essay essay, int idx) {
+        CrawlerFrame.outputArea.append(idx + "---------------------------\n");
+        CrawlerFrame.outputArea.append("Title:" + essay.name + "\n");
+        CrawlerFrame.outputArea.append("Url:" + essay.url + "\n");
+        CrawlerFrame.outputArea.append("CitedCnt:" + essay.citedCnt + "\n");
         CrawlerFrame.outputArea.append("-----------------------------\n");
         CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
     }
+
     // helper function to check uniqueness
-    boolean checkName(String name){
-        for(Essay essay:esLst){
-            if(name.equals(essay.name))
+    boolean checkName(String name) {
+        for (Essay essay : esLst) {
+            if (name.equals(essay.name))
                 return false;
         }
         return true;
     }
+
     // helper function to parse the web source code
     int getCiteNum(WebElement wbe) {
         return Integer.parseInt(wbe.findElement(By.className("sc_info_a")).getText());

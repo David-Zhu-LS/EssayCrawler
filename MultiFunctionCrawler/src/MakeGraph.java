@@ -23,7 +23,7 @@ public class MakeGraph {
             fout.write("}".getBytes());
             fout.close();
             Runtime rt = Runtime.getRuntime();
-            Process p = rt.exec("graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
+            Process p = rt.exec("lib\\graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
             p.waitFor();
         } catch (IOException e) {
             e.printStackTrace();
