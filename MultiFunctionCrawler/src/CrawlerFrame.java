@@ -144,14 +144,14 @@ public class CrawlerFrame extends JFrame {
         setAndAddButton(mainFrame, btnSaveEssay, "SaveEssay", Color.lightGray, 650, 18, 116, 40);
         setAndAddButton(mainFrame, btnGenerateGraph, "MakeGraph", Color.lightGray, 520, 72, 250, 40);
         //setAndAddButton(mainFrame, btnSaveGraph, "SaveGraph", Color.lightGray, 650, 72, 116, 40);
-        setAndAdd(mainFrame, lblInfo, 520, 426, 250, 300);
+        setAndAdd(mainFrame, lblInfo, 520, 216, 250, 50);
         setAndAdd(mainFrame, lblConfigIndicator,520,126,200,20);
         setAndAdd(mainFrame, lblMinCited,520,156,200,20);
         setAndAdd(mainFrame, lblMaxChildren,520,186,200,20);
         setAndAdd(mainFrame, lblMaxCnt,520,216,200,20);
         lblInfo.setSize(250, 150);
-        String infoContent = "<html>Click a button to start.<br/>More information could be shown here.<br/>" +
-                "How to use the program?<br/>(1) Input the url you want to start crawling from in the upper textField" +
+        String infoContent = "<html>" +
+                "Guidance:<br/>(1) Input the url you want to start crawling from in the upper textField" +
                 "<br/>(2) Click the button.<html>";
         lblInfo.setText(infoContent);
         setAndAddTextArea(mainFrame, inputArea, 18, 18, 484, 30, false, 18);
