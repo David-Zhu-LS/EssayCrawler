@@ -1,6 +1,4 @@
-import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 import org.pushingpixels.substance.api.SubstanceSkin;
-import org.pushingpixels.substance.api.skin.GraphiteAquaSkin;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,29 +32,50 @@ public class DisplayGraphFrame extends JFrame {
         //int maxHeight =  (int) (maxWidth *(icon.getIconHeight() * 1.0 /icon.getIconWidth()));
         //965*750
         l.setIcon(icon);
-        l.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
-        pnlGraph.setLayout(new BorderLayout());
-        pnlGraph.add(l, BorderLayout.CENTER);
+        //l.setBounds(0, 0, icon.getIconWidth(), icon.getIconHeight());
         //layout design.
-        int finalWidth = icon.getIconWidth() + 200;
+        int finalWidth = Math.min(icon.getIconWidth() + 50, g_nWidth - 50);
         int finalHeight = Math.min(icon.getIconHeight() + 50, g_nHeight - 50);
-        displayFrame.setLayout(null);
+        displayFrame.setLayout(new BorderLayout(0,0));
         displayFrame.setSize(finalWidth, finalHeight);
         displayFrame.setTitle("Graph");
-        CrawlerFrame.setAndAddButton(displayFrame, btnSaveGraph, "SaveGraph", Color.lightGray, finalWidth - 150, 18, 116, 40);
-        CrawlerFrame.setAndAddButton(displayFrame, btnQuit, "Quit", Color.lightGray, finalWidth - 150, 72, 116, 40);
-        CrawlerFrame.setAndAdd(displayFrame, pnlGraph, 10, 25, finalWidth - 180, finalHeight - 20);
+        pnlGraph.setLayout(new GridLayout(2,1));
+        setButton2(displayFrame, btnSaveGraph, "SaveGraph", Color.lightGray, finalWidth - 150, 18, 116, 40);
+        setButton2(displayFrame, btnQuit, "Quit", Color.lightGray, finalWidth - 150, 72, 116, 40);
+        pnlGraph.add(btnSaveGraph);
+        pnlGraph.add(btnQuit);
+        //CrawlerFrame.setAndAdd(displayFrame, l, 10, 25, finalWidth - 180, finalHeight - 20);
+        //displayFrame.getContentPane().add(l);
+        //pnlGraph.setLayout(new BorderLayout(0,0));
+        //pnlGraph.setBorder(new EmptyBorder(5, 5, 5, 5));
+        //pnlGraph.add(l,BorderLayout.CENTER);
+        JScrollPane scroller = new JScrollPane();   // set the scrollbar
+        scroller.setBounds(10, 25, finalWidth - 180, finalHeight - 20);
+        scroller.setViewportView(l);
+        scroller.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);//horizontal one always appears
+        scroller.setVerticalScrollBarPolicy(
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);//vertical one always appears
+        displayFrame.getContentPane().add(scroller,BorderLayout.CENTER);
+        displayFrame.getContentPane().add(pnlGraph,BorderLayout.EAST);
         btnSaveGraph.addActionListener((e) -> {
 
         });
         btnQuit.addActionListener((e) -> {
             displayFrame.setVisible(false);
         });
-
-
         //set the close button
         displayFrame.setVisible(true);
         displayFrame.setLocationRelativeTo(null);
         displayFrame.setResizable(false);
+    }
+    // Set and add the button to the frame.
+    public static void setButton2(JFrame dst, JButton button, String name, Color color, int posx, int posy, int width, int height) {
+        button.setText(name);
+        button.setBackground(color);
+        button.setBounds(posx, posy, width, height);
+        // Text displayed at the center
+        button.setHorizontalTextPosition(JButton.CENTER);
+        button.setVerticalTextPosition(JButton.CENTER);
     }
 }

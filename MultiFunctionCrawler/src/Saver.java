@@ -76,7 +76,7 @@ public class Saver {
     public static void essaySaver() {
         //If it has been saved, return;
         if (CrawlerFrame.haveSaved) return;
-        if (CrawlerFrame.lastOp == CrawlerFrame.Op.None || CrawlerFrame.lastUrl == null) return;
+        if (CrawlerFrame.lastOp != CrawlerFrame.Op.CrawlEssay) return;
         String path = defaultPath + File.separator + "Essay.txt";
         try {
             File fout = new File(path);
@@ -95,5 +95,6 @@ public class Saver {
         } catch (IOException e2) {
             e2.printStackTrace();
         }
+        CrawlerFrame.haveSaved = true;
     }
 }
