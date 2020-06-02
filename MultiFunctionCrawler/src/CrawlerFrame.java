@@ -78,7 +78,7 @@ public class CrawlerFrame extends JFrame {
     public static Op lastOp;
     public static boolean haveSaved;
 
-    public static enum Op {None, Crawl, TagsCount, HttpGet, GetEmailAddr, GetPictures, Save, Clear}
+    public static enum Op {None, Crawl, TagsCount, HttpGet, GetEmailAddr, GetPictures, Save, Clear, CrawlEssay}
 
     ;
     public static DisplayGraphFrame disGraphFrame;
@@ -161,7 +161,6 @@ public class CrawlerFrame extends JFrame {
             DisplayGraphFrame.display(G);
         });
         btnSaveGraph.addActionListener((e) -> {
-
         });
         //set JTextArea.
         outputArea.setLineWrap(true);        // Activate LineWrap function(start a new line automatically)
