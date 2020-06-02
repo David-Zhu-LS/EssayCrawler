@@ -1,5 +1,6 @@
 import Kits.UrlKit;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ImeNotAvailableException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -44,6 +45,10 @@ public class EssayCrawler {
 
     // the major part of crawling
     void crawl(String stUrl) {
+        //initialize
+        esLst.clear();
+        urlQue.clear();
+        essay2Id.clear();
         //check the input url
         if (!UrlKit.checkUrl(stUrl)) {
             //System.out.println("Url input invalid! Please input another one.");
@@ -64,6 +69,7 @@ public class EssayCrawler {
         while (!urlQue.isEmpty()) {
             if (esLst.size() >= MAXN) {
                 driver.close();
+                resCheck();
                 //change some variables
                 CrawlerFrame.lastOp = CrawlerFrame.Op.CrawlEssay;
                 CrawlerFrame.lastUrl = stUrl;
@@ -82,7 +88,8 @@ public class EssayCrawler {
                 //basic information of the front essay
                 String frontTitle = driver.findElement(By.className("main-info")).findElement(By.tagName("a")).getText();
                 int frontCite = Integer.parseInt(driver.findElement(By.className("sc_cite_cont")).getText());
-                Essay frontEssay = new Essay(frontTitle, frontUrl, frontCite);
+                int frontYear = Integer.parseInt(driver.findElement(By.className("year_wr")).findElement(By.className("kw_main")).getText());
+                Essay frontEssay = new Essay(frontTitle, frontUrl, frontCite,frontYear);
 
                 // check uniqueness
                 if (checkName(frontTitle) == false)
@@ -115,9 +122,13 @@ public class EssayCrawler {
                     if (citNum < MIN_CIT || counter > MAX_CHILDREN) {
                         break;
                     }
-                    counter += 1;
                     String essayTitle = esy.findElement(By.className("relative_title")).getText();
                     String essayUrl = esy.findElement(By.className("relative_title")).getAttribute("href");
+                    // self-citation is not allowed
+                    if(essayTitle.equals(frontTitle)){
+                        continue;
+                    }
+                    counter += 1;
                     frontEssay.citList.add(essayTitle);
                     urlQue.add(essayUrl);
                 }
@@ -147,6 +158,7 @@ public class EssayCrawler {
         }
         System.out.println("Finished!");
         driver.close();
+        resCheck();
         //change some variables
         CrawlerFrame.lastOp = CrawlerFrame.Op.CrawlEssay;
         CrawlerFrame.lastUrl = stUrl;
@@ -169,7 +181,7 @@ public class EssayCrawler {
         return new Graph(len, edgeCnt, esLst, graph);
     }
 
-    // print the graph
+    // print the graphs
     void printGraph() {
         for (int i = 0; i < MAXN; i++) {
             for (int j = 0; j < MAXN; j++) {
@@ -221,6 +233,21 @@ public class EssayCrawler {
             MAXN = mcnt;
             return true;
         }
-
+    }
+    // guarantee that the result of crawlEssay is legal
+    void resCheck(){
+        for(Essay esy: esLst){
+            ArrayList<String> delLst = new ArrayList<>();
+            for (String sonTitle:esy.citList){
+                if(essay2Id.containsKey(sonTitle)){
+                    if(esLst.get(essay2Id.get(sonTitle)).year < esy.year){
+                        delLst.add(sonTitle);
+                    }
+                }
+            }
+            for(String delTitle:delLst){
+                esy.citList.remove(delTitle);
+            }
+        }
     }
 }
