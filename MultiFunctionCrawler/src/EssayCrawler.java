@@ -25,7 +25,7 @@ import static java.lang.Thread.sleep;
 public class EssayCrawler {
     static final int MIN_CIT = 10; // if the citation number of an essay is below 10,abandon it
     static final int MAX_CHILDREN = 3; //from every essay,only the top 3 could enqueue
-    static final int MAXN = 20; //maximum number of essays to be demonstrated
+    static final int MAXN = 3; //maximum number of essays to be demonstrated
     ArrayList<Essay> esLst = new ArrayList<>();
     LinkedList<String> urlQue = new LinkedList<>();
     HashMap<String, Integer> essay2Id = new HashMap<>();
@@ -42,9 +42,6 @@ public class EssayCrawler {
 
     // the major part of crawling
     void crawl(String stUrl) {
-        // To run selenium,you need to set the path of your chromedriver
-        System.setProperty("webdriver.chrome.driver", ".\\chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
         //check the input url
         if (!UrlKit.checkUrl(stUrl)) {
             //System.out.println("Url input invalid! Please input another one.");
@@ -52,14 +49,22 @@ public class EssayCrawler {
             CrawlerFrame.outputArea.append("Url input invalid! Please input another one.\n");
             CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
             CrawlerFrame.urlOrigin = null;
-            driver.close();
             JOptionPane.showMessageDialog(null, "Invalid Url!");
             return;
         }
+        // To run selenium,you need to set the path of your chromedriver
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\ZZN\\IdeaProjects\\MultiFunctionCrawler\\chromedriver.exe");
+        //System.out.println(System.getProperty("webdriver.chrome.driver"));
+        WebDriver driver = new ChromeDriver();
+
         urlQue.push(stUrl);
         while (!urlQue.isEmpty()) {
             if (esLst.size() >= MAXN) {
                 driver.close();
+                //change some variables
+                CrawlerFrame.lastOp = CrawlerFrame.Op.CrawlEssay;
+                CrawlerFrame.lastUrl = stUrl;
+                CrawlerFrame.haveSaved = false;
                 JOptionPane.showMessageDialog(null, "Done!");
                 return;
             }
@@ -127,6 +132,10 @@ public class EssayCrawler {
                     CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
                     CrawlerFrame.urlOrigin = null;
                     driver.close();
+                    //change some variables
+                    CrawlerFrame.lastOp = CrawlerFrame.Op.CrawlEssay;
+                    CrawlerFrame.lastUrl = stUrl;
+                    CrawlerFrame.haveSaved = false;
                     JOptionPane.showMessageDialog(null, "Inappropriate Url!");
                     return;
                 }
@@ -135,6 +144,10 @@ public class EssayCrawler {
         }
         System.out.println("Finished!");
         driver.close();
+        //change some variables
+        CrawlerFrame.lastOp = CrawlerFrame.Op.CrawlEssay;
+        CrawlerFrame.lastUrl = stUrl;
+        CrawlerFrame.haveSaved = false;
         return;
     }
 
