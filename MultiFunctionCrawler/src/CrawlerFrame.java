@@ -139,7 +139,7 @@ public class CrawlerFrame extends JFrame {
         //layout design.
         mainFrame.setLayout(null);
         mainFrame.setSize(800, 636);
-        mainFrame.setTitle("Crawler");
+        mainFrame.setTitle("MultiFunctionCrawler");
         setAndAddButton(mainFrame, btnCrawlEssay, "CrawlEssay", Color.lightGray, 520, 18, 116, 40);
         setAndAddButton(mainFrame, btnSaveEssay, "SaveEssay", Color.lightGray, 650, 18, 116, 40);
         setAndAddButton(mainFrame, btnGenerateGraph, "MakeGraph", Color.lightGray, 520, 72, 250, 40);
