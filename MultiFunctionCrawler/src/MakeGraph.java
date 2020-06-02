@@ -41,7 +41,7 @@ public class MakeGraph {
                 color = String.format("0.482 %.4f 0.878", Math.abs(g.nodes.get(i).heat));
             if (name.length() > 20)
                 name = name.substring(0, 17) + "...";
-            fout.write(String.format("node%d [label=\"%s\" style=filled fillcolor=\"%s\"];\n", i, name, color).getBytes());
+            fout.write(String.format("node%d [label=\"[%d]%s\" style=filled fillcolor=\"%s\"];\n", i, i, name, color).getBytes());
         }
         for (int i = 0; i < g.nodeCnt; i++)
             for (int j = 0; j < g.nodeCnt; j++)
