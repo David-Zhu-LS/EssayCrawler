@@ -33,7 +33,7 @@ public class DisplayGraphFrame extends JFrame {
         }
         ImageIcon icon = null;
         try {
-            icon = new ImageIcon(ImageIO.read(new File("./saved/graph.png")));
+            icon = new ImageIcon(ImageIO.read(new File("../saved/graph.png")));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -55,7 +55,7 @@ public class EssayCrawler {
             return;
         }
         // To run selenium,you need to set the path of your chromedriver
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\ZZN\\IdeaProjects\\MultiFunctionCrawler\\chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "..\\chromedriver.exe");
         //System.out.println(System.getProperty("webdriver.chrome.driver"));
         WebDriver driver = new ChromeDriver();
 

@@ -6,24 +6,24 @@ public class MakeGraph {
     public static final int edgeMax = 100, nodeMax = 50;
 
     public static String addE(int from, int to) {
-        return String.format("node%d -> node%d;\n", from, to);
+        return String.format("node%d -> node%d;\n", from + 1, to + 1);
     }
 
     public static void generate(Graph g) throws Exception {
         //System.out.println(System.getProperty("user.dir"));
         if (g.nodeCnt > nodeMax) throw new Exception("Too many essays.", null);
         try {
-            File f = new File("./saved/graph.txt"), fdir = new File("./saved");
+            File f = new File("../saved/graph.txt"), fdir = new File("./saved");
             if (!fdir.exists()) fdir.mkdir();
             if (f.exists()) f.delete();
             f.createNewFile();
             FileOutputStream fout = new FileOutputStream(f);
-            fout.write("digraph G{\nratio=0.6;\n".getBytes());
+            fout.write("digraph G{\nratio=0.6;\nNode[shape=record,height=.1];\n".getBytes());
             graphToTxt(fout, g);
             fout.write("}".getBytes());
             fout.close();
             Runtime rt = Runtime.getRuntime();
-            Process p = rt.exec("graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
+            Process p = rt.exec("..\\graphvis\\bin\\dot.exe -Tpng ../saved/graph.txt -o ../saved/graph.png");
             p.waitFor();
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,13 +41,14 @@ public class MakeGraph {
                 color = String.format("0.482 %.4f 0.878", Math.abs(g.nodes.get(i).heat));
             if (name.length() > 20)
                 name = name.substring(0, 17) + "...";
-            fout.write(String.format("node%d [label=\"[%d]%s\" style=filled fillcolor=\"%s\"];\n", i, i, name, color).getBytes());
+            name = String.format("\"{[%d]%s|Cited:%d}\"", i + 1, name, g.nodes.get(i).citedCnt);
+            fout.write(String.format("node%d [label=%s style=filled fillcolor=\"%s\"];\n", i + 1, name, color).getBytes());
         }
         for (int i = 0; i < g.nodeCnt; i++)
             for (int j = 0; j < g.nodeCnt; j++)
                 if (g.mat[i][j] && eNum < edgeMax) {
                     eNum += 1;
-                    fout.write(addE(i, j).getBytes());
+                    fout.write(addE(j, i).getBytes());
                 }
     }
 }

@@ -20,7 +20,7 @@ public class Graph {
                 nodes.get(i).heat = 0;
         } else {
             for (int i = 0; i < nodeCnt; i++)
-                nodes.get(i).heat = (2.0 * (nodes.get(i).citedCnt - minFlow)) / flowRange - 1;
+                nodes.get(i).heat = 2 * Math.log10(9.0 * (nodes.get(i).citedCnt - minFlow) / flowRange + 1) - 1;
         }
     }
 }
