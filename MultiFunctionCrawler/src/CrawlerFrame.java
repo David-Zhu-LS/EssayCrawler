@@ -114,6 +114,9 @@ public class CrawlerFrame extends JFrame {
      */
     public static JTextArea inputArea;
     public static JTextArea outputArea;
+    public static JTextArea configMinCited;
+    public static JTextArea configMaxChildren;
+    public static JTextArea configMaxCnt;
     public static JRadioButton rbtnDynamic, rbtnStatic;
     public static boolean isDynamic = false;
 
@@ -122,19 +125,30 @@ public class CrawlerFrame extends JFrame {
         JButton btnCrawlEssay = new JButton();
         JButton btnSaveEssay = new JButton();
         JButton btnGenerateGraph = new JButton();
-        JButton btnSaveGraph = new JButton();
+        //JButton btnSaveGraph = new JButton();
         JLabel lblInfo = new JLabel();
-        inputArea = new JTextArea("Input the start url here.", 1, 60);
+        JLabel lblConfigIndicator = new JLabel("Crawling Arguments:");
+        JLabel lblMinCited = new JLabel("MinCitedThreshold:");
+        JLabel lblMaxChildren = new JLabel("MaxBranch:");
+        JLabel lblMaxCnt = new JLabel("MaxEssayCnt:");
+        inputArea = new JTextArea("Input the start url here.", 1,100);
         outputArea = new JTextArea("Results will be showed here.\n", 30, 20);
+        configMinCited = new JTextArea("10",1,5);
+        configMaxChildren = new JTextArea("3",1,5);
+        configMaxCnt = new JTextArea("20",1,5);
         //layout design.
         mainFrame.setLayout(null);
         mainFrame.setSize(800, 636);
         mainFrame.setTitle("Crawler");
         setAndAddButton(mainFrame, btnCrawlEssay, "CrawlEssay", Color.lightGray, 520, 18, 116, 40);
         setAndAddButton(mainFrame, btnSaveEssay, "SaveEssay", Color.lightGray, 650, 18, 116, 40);
-        setAndAddButton(mainFrame, btnGenerateGraph, "MakeGraph", Color.lightGray, 520, 72, 116, 40);
-        setAndAddButton(mainFrame, btnSaveGraph, "SaveGraph", Color.lightGray, 650, 72, 116, 40);
-        setAndAdd(mainFrame, lblInfo, 520, 126, 250, 300);
+        setAndAddButton(mainFrame, btnGenerateGraph, "MakeGraph", Color.lightGray, 520, 72, 250, 40);
+        //setAndAddButton(mainFrame, btnSaveGraph, "SaveGraph", Color.lightGray, 650, 72, 116, 40);
+        setAndAdd(mainFrame, lblInfo, 520, 426, 250, 300);
+        setAndAdd(mainFrame, lblConfigIndicator,520,126,200,20);
+        setAndAdd(mainFrame, lblMinCited,520,156,200,20);
+        setAndAdd(mainFrame, lblMaxChildren,520,186,200,20);
+        setAndAdd(mainFrame, lblMaxCnt,520,216,200,20);
         lblInfo.setSize(250, 150);
         String infoContent = "<html>Click a button to start.<br/>More information could be shown here.<br/>" +
                 "How to use the program?<br/>(1) Input the url you want to start crawling from in the upper textField" +
@@ -142,6 +156,10 @@ public class CrawlerFrame extends JFrame {
         lblInfo.setText(infoContent);
         setAndAddTextArea(mainFrame, inputArea, 18, 18, 484, 30, false, 18);
         setAndAddTextArea(mainFrame, outputArea, 18, 72, 484, 500, true, 15);
+        setAndAddTextArea(mainFrame, configMinCited, 684, 156, 76, 20, false, 15);
+        setAndAddTextArea(mainFrame, configMaxChildren, 684, 186, 76, 20, false, 15);
+        setAndAddTextArea(mainFrame, configMaxCnt, 684,
+                216, 76, 20, false, 15);
         /*setAndAdd(rbtnDynamic,50,100,100,50);
         setAndAdd(rbtnStatic,150,100,100,50);*/
         //set button ActionListener.
@@ -149,8 +167,19 @@ public class CrawlerFrame extends JFrame {
         btnCrawlEssay.addActionListener((e) -> {
             String input = inputArea.getText();
             System.out.println(input);
+            // argument check
+            if(!EssayCrawler.argumentCheck(configMinCited.getText(),configMaxChildren.getText(),configMaxCnt.getText())){
+                CrawlerFrame.outputArea.setText("");
+                CrawlerFrame.outputArea.append("Arguments invalid! Please input another one.\n");
+                CrawlerFrame.outputArea.paintImmediately(CrawlerFrame.outputArea.getBounds());
+                CrawlerFrame.urlOrigin = null;
+                JOptionPane.showMessageDialog(null, "Invalid arguments!");
+                return;
+            }
             EssayCrawler essayCrawler = new EssayCrawler(input);
+            // crawl
             essayCrawler.crawl(essayCrawler.stUrl);
+            // make graph
             G = essayCrawler.getGraph();
             essayCrawler.printGraph();
         });
@@ -160,9 +189,16 @@ public class CrawlerFrame extends JFrame {
         btnGenerateGraph.addActionListener((e) -> {
             DisplayGraphFrame.display(G);
         });
-        btnSaveGraph.addActionListener((e) -> {
-        });
+        /*btnSaveGraph.addActionListener((e) -> {
+        });*/
         //set JTextArea.
+        JScrollPane scroller1 = new JScrollPane();   // set the scrollbar
+        scroller1.setBounds(18, 18, 484, 30);
+        mainFrame.getContentPane().add(scroller1);
+        scroller1.setViewportView(inputArea);
+        scroller1.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);//horizontal one appears as needed
+
         outputArea.setLineWrap(true);        // Activate LineWrap function(start a new line automatically)
         outputArea.setWrapStyleWord(true);   // Activate WrapStyleWord function(start a line without break a word)
         JScrollPane scroller = new JScrollPane();   // set the scrollbar

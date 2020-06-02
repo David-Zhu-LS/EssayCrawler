@@ -23,9 +23,11 @@ import static java.lang.Thread.sleep;
  * @author Lin_Shu
  */
 public class EssayCrawler {
-    static final int MIN_CIT = 10; // if the citation number of an essay is below 10,abandon it
-    static final int MAX_CHILDREN = 3; //from every essay,only the top 3 could enqueue
-    static final int MAXN = 20; //maximum number of essays to be demonstrated
+    private static int MIN_CIT = 10; // if the citation number of an essay is below 10,abandon it
+    private static int MAX_CHILDREN = 3; //from every essay,only the top 3 could enqueue
+    private static int MAXN = 1; //maximum number of essays to be demonstrated
+    static final int MAX_CHILDREN_LIMIT = 10; //from every essay,only the top 3 could enqueue
+    static final int MAXN_LIMIT = 50; //maximum number of essays to be demonstrated
     ArrayList<Essay> esLst = new ArrayList<>();
     LinkedList<String> urlQue = new LinkedList<>();
     HashMap<String, Integer> essay2Id = new HashMap<>();
@@ -57,6 +59,7 @@ public class EssayCrawler {
         //System.out.println(System.getProperty("webdriver.chrome.driver"));
         WebDriver driver = new ChromeDriver();
 
+        CrawlerFrame.outputArea.setText("");
         urlQue.push(stUrl);
         while (!urlQue.isEmpty()) {
             if (esLst.size() >= MAXN) {
@@ -198,5 +201,26 @@ public class EssayCrawler {
     // helper function to parse the web source code
     int getCiteNum(WebElement wbe) {
         return Integer.parseInt(wbe.findElement(By.className("sc_info_a")).getText());
+    }
+
+    // check the argument
+    public static boolean argumentCheck(String minCited, String maxBranch, String maxCnt){
+        int mcited = -1, mbranch = -1, mcnt = -1;
+        try{
+            mcited = Integer.parseInt(minCited);
+            mbranch = Integer.parseInt(maxBranch);
+            mcnt = Integer.parseInt(maxCnt);
+        }catch(NumberFormatException ex){
+            return false;
+        }
+        if(mcited <= 0 || mbranch <= 0 || mcnt <= 0 || mbranch > MAX_CHILDREN_LIMIT || mcnt > MAXN_LIMIT)
+            return false;
+        else {
+            MIN_CIT = mcited;
+            MAX_CHILDREN = mbranch;
+            MAXN = mcnt;
+            return true;
+        }
+
     }
 }
