@@ -23,7 +23,7 @@ public class MakeGraph {
             fout.write("}".getBytes());
             fout.close();
             Runtime rt = Runtime.getRuntime();
-            Process p = rt.exec("lib\\graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
+            Process p = rt.exec("graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
             p.waitFor();
         } catch (IOException e) {
             e.printStackTrace();
@@ -41,7 +41,7 @@ public class MakeGraph {
                 color = String.format("0.482 %.4f 0.878", Math.abs(g.nodes.get(i).heat));
             if (name.length() > 20)
                 name = name.substring(0, 17) + "...";
-            fout.write(String.format("node%d [label=\"%s\" style=filled fillcolor=\"%s\"];\n", i, name, color).getBytes());
+            fout.write(String.format("node%d [label=\"[%d]%s\" style=filled fillcolor=\"%s\"];\n", i, i, name, color).getBytes());
         }
         for (int i = 0; i < g.nodeCnt; i++)
             for (int j = 0; j < g.nodeCnt; j++)
