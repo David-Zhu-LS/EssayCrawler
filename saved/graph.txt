@@ -1,0 +1,23 @@
+digraph G{
+ratio=0.6;
+node0 [label="LSTM Neural Netwo..." style=filled fillcolor="0.482 0.7586 0.878"];
+node1 [label="Long short-term m..." style=filled fillcolor="0.482 0.4501 0.878"];
+node2 [label="Character-Aware N..." style=filled fillcolor="0.482 0.6623 0.878"];
+node3 [label="Neural Machine Tr..." style=filled fillcolor="0.482 0.8015 0.878"];
+node4 [label="Deep Speech 2: En..." style=filled fillcolor="0.482 0.4657 0.878"];
+node5 [label="Google's Multilin..." style=filled fillcolor="0.482 0.9640 0.878"];
+node6 [label="Deep learning in ..." style=filled fillcolor="0.000 1.0000 1.000"];
+node7 [label="Enriching Word Ve..." style=filled fillcolor="0.482 0.4316 0.878"];
+node8 [label="Google's Neural M..." style=filled fillcolor="0.482 0.1708 0.878"];
+node9 [label="3D-R2N2: A Unifie..." style=filled fillcolor="0.482 1.0000 0.878"];
+node0 -> node2;
+node0 -> node9;
+node1 -> node4;
+node1 -> node6;
+node2 -> node3;
+node2 -> node7;
+node3 -> node5;
+node3 -> node7;
+node3 -> node8;
+node4 -> node4;
+}
