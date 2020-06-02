@@ -18,12 +18,12 @@ public class MakeGraph {
             if (f.exists()) f.delete();
             f.createNewFile();
             FileOutputStream fout = new FileOutputStream(f);
-            fout.write("digraph G{\n".getBytes());
+            fout.write("digraph G{\nratio=0.6;\n".getBytes());
             graphToTxt(fout, g);
             fout.write("}".getBytes());
             fout.close();
             Runtime rt = Runtime.getRuntime();
-            Process p = rt.exec("lib\\graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
+            Process p = rt.exec("graphvis\\bin\\dot.exe -Tpng ./saved/graph.txt -o ./saved/graph.png");
             p.waitFor();
         } catch (IOException e) {
             e.printStackTrace();

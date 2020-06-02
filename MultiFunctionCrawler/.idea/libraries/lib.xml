@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/laf-widget-7.2.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/substance-6.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/selenium-server-standalone-3.141.59.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/trident.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
