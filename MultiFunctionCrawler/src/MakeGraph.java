@@ -11,7 +11,7 @@ public class MakeGraph {
 
     public static void generate(Graph g) throws Exception {
         //System.out.println(System.getProperty("user.dir"));
-        if (g.edgeCnt >= nodeMax) throw new Exception("Too many essays.", null);
+        if (g.nodeCnt >= nodeMax) throw new Exception("Too many essays.", null);
         try {
             File f = new File("./saved/graph.txt"), fdir = new File("./saved");
             if (!fdir.exists()) fdir.mkdir();
@@ -28,7 +28,6 @@ public class MakeGraph {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (g.edgeCnt >= edgeMax) throw new Exception("Too many edges; some are omitted.", null);
     }
 
     private static void graphToTxt(FileOutputStream fout, Graph g) throws IOException {
