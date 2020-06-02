@@ -25,7 +25,7 @@ import static java.lang.Thread.sleep;
 public class EssayCrawler {
     static final int MIN_CIT = 10; // if the citation number of an essay is below 10,abandon it
     static final int MAX_CHILDREN = 3; //from every essay,only the top 3 could enqueue
-    static final int MAXN = 10; //maximum number of essays to be demonstrated
+    static final int MAXN = 20; //maximum number of essays to be demonstrated
     ArrayList<Essay> esLst = new ArrayList<>();
     LinkedList<String> urlQue = new LinkedList<>();
     HashMap<String, Integer> essay2Id = new HashMap<>();
