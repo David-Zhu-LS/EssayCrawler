@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 /**
  * Essay: This class defines basic methods and fields of an "Essay"
- *
- * @author Lin_Shu
  */
 public class Essay {
     public String name; // title of the essay

@@ -22,10 +22,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * We use ConcurrentHashMap to store all the urls that we have got,
  * for ConcurrentHashMap is thread-safe and it is fast and convenient to check whether a url has been found.
  * 2)KeepUrlCrawl: Keep crawling.
- * 3)TagsCount: Count the tags that have been used.
+ * 3)CountTag: Count the tags that have been used.
  * 4)HttpGet: Get Http connection and make the GET request. Print the response.
- * 5)GetEmailAddr: Get email addresses.
- * 6)GetPicture: Get the resource of pictures.(Not download.)
+ * 5)GetEA: Get email addresses.
+ * 6)GetPic: Get the resource of pictures.(Not download.)
  * 7)Save: Save the urls we have got or other content in the outputArea.
  * 8)Clear: Clear the former information.
  *

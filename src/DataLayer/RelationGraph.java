@@ -2,6 +2,9 @@ package DataLayer;
 
 import java.util.List;
 
+/**
+ * RelationGraph: 论文引用关系图类
+ */
 public class RelationGraph {
     public int nodeCnt, edgeCnt, minFlow = Integer.MAX_VALUE, maxFlow = 0, flowRange;
     public List<Essay> nodes;
