@@ -20,6 +20,7 @@ public class RelationGraph {
             if (nodes.get(i).citedCnt > maxFlow) maxFlow = nodes.get(i).citedCnt;
         }
         flowRange = maxFlow - minFlow;
+        //更新图中结点的heat，用来衡量在图中相对的热度高低
         if (flowRange == 0) {
             for (int i = 0; i < nodeCnt; i++)
                 nodes.get(i).heat = 0;
