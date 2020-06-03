@@ -40,7 +40,7 @@
 
 * 程序适配性：由于百度文库许多内容不能直接爬取，在这里我们利用selenium，借助chromedriver（适配Chrome 83）来模拟人的爬取过程。因为chromedriver具有一定的适配限制，所以该功能可能不能在没有安装Google Chrome 83机器上使用。
 * 路径设置：由于graphviz和chromedrive文件体积略大，打包至jar中显得累赘且不便于调用，故采用单独存放。而由于测试时和使用jar包时工作路径不同，故需要进行不同的设置
-  * **请不要移动graphviz和chromedrive的位置！**
-
+  * **请保证下载了graphviz文件夹，chromedrive.exe，MultiFunctionCrawler.jar，并将三者与MultiFunctionCrawler文件夹放置于同一目录下！**
+* 见MultiFunctionCrawler\\PathSetting.png
   * 测试时EssayCrawler 67行路径设为"..\\\chromedriver.exe"，MakeGraph 33行路径设为"..\\\\graphvis\\\\bin\\\\dot.exe"
   * 打包成jar之前，将上述两处".."改为"."
